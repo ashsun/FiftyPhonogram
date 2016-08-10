@@ -7,7 +7,9 @@ using System.Collections.Generic;
 public class BasePhonogram
 {
 	public string Hiragana;
+	public string HiraganaOriginal;
 	public string Katakana;
+	public string KatakanaOriginal;
 	public string Rome;
 }
 

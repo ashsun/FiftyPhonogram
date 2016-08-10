@@ -10,7 +10,7 @@ public class MonoMainPanel : MonoBehaviour
 	public GameObject ChooseAndStartButton;
 	public GameObject CardObject;
 
-	private List<GameObject> _cards;
+	private List<Card> _cards;
 	private HashSet<int> _choosed;
 
 	public void Start()
@@ -18,7 +18,7 @@ public class MonoMainPanel : MonoBehaviour
 		TestButton.SetActive(true);
 		ChooseAndStartButton.SetActive(false);
 
-		_cards = new List<GameObject>();
+		_cards = new List<Card>();
 		_choosed = null;
 
 		GameObject card;
@@ -26,27 +26,11 @@ public class MonoMainPanel : MonoBehaviour
 		for (int i = 0; i < data.Phonograms.Length; i++)
 		{
 			card = GameObject.Instantiate(CardObject) as GameObject;
-			card.transform.SetParent(transform.Find("Scroll/Viewport/Content"));
-			card.transform.Find("Hiragana").GetComponent<Text>().text = data.Phonograms[i].Hiragana;
-			card.transform.Find("Katakana").GetComponent<Text>().text = data.Phonograms[i].Katakana;
-			card.transform.Find("Rome").GetComponent<Text>().text = data.Phonograms[i].Rome;
-
-			if (data.Phonograms[i].Hiragana.Length > 1)
-			{
-				card.transform.Find("Hiragana").GetComponent<Text>().fontSize = 25;
-				card.transform.Find("Hiragana").transform.localPosition += new Vector3(0, 9, 0);
-			}
-
-			if (data.Phonograms[i].Katakana.Length > 1)
-			{
-				card.transform.Find("Katakana").GetComponent<Text>().fontSize = 25;
-				card.transform.Find("Katakana").transform.localPosition += new Vector3(0, 9, 0);
-			}
-
 			card.SetActive(true);
+			card.transform.SetParent(transform.Find("Scroll/Viewport/Content"));
 			card.name = "Card" + i.ToString("00");
 
-			_cards.Add(card);
+			_cards.Add(new Card(card, data.Phonograms[i], 1));
 		}
 	}
 
@@ -54,15 +38,17 @@ public class MonoMainPanel : MonoBehaviour
 	{
 		for (int i = 0; i < _cards.Count; i++)
 		{
-			_cards[i].transform.GetComponent<Image>().color = _choosed.Contains(i) ? Color.yellow : Color.white;
+			_cards[i].SetChoosed(_choosed.Contains(i));
 		}
 	}
 
 	public void OnClickCard(GameObject card)
 	{
+		FiftyPhonogramData data = FiftyPhonogramDataLoader.GetData();
+		int cardID = int.Parse(card.name.Replace("Card", ""));
+
 		if (_choosed != null)
 		{
-			int cardID = int.Parse(card.name.Replace("Card", ""));
 			if (_choosed.Contains(cardID))
 			{
 				_choosed.Remove(cardID);
@@ -75,12 +61,21 @@ public class MonoMainPanel : MonoBehaviour
 
 			RefreshChoosed();
 		}
+		else
+		{
+			_cards[cardID].Switch();
+		}
 	}
 	
 	public void OnClickTest()
 	{
 		TestButton.SetActive(false);
 		ChooseAndStartButton.SetActive(true);
+
+		for (int i = 0; i < _cards.Count; i++)
+		{
+			_cards[i].ShowCard(false);
+		}
 
 		_choosed = ChoosedRecord.LoadChoosedRecord();
 
