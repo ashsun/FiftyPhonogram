@@ -8,10 +8,10 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 0
-  targetDevice: 2
+  targetDevice: 0
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: ASH
   productName: FiftyPhonogram
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -151,7 +151,7 @@ PlayerSettings:
     Android: com.Company.ProductName
     Standalone: unity.DefaultCompany.FiftyPhonogram
     Tizen: com.Company.ProductName
-    iOS: com.Company.ProductName
+    iOS: com.Ash.FiftyPhonogram
     tvOS: com.Company.ProductName
   buildNumber:
     iOS: 0
